@@ -212,6 +212,10 @@ func NewServer(log logrus.FieldLogger, ctx *serveContext) (*Server, error) {
 		options.RenewDeadline = &ctx.Config.LeaderElection.RenewDeadline
 		options.RetryPeriod = &ctx.Config.LeaderElection.RetryPeriod
 		options.LeaderElectionReleaseOnCancel = true
+		watchNamespace, found := os.LookupEnv("WATCH_NAMESPACE")
+		if found {
+			options.Namespace = watchNamespace
+		}
 	}
 	mgr, err := manager.New(restConfig, options)
 	if err != nil {
